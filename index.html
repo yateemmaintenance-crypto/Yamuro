@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="description" content="YAMURO – Yateem Asset, Utility & Maintenance Management Admin" />
+  <title>YAMURO Admin</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="logo.jpg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-box">
+      <img src="logo.jpg" alt="YAMURO" />
+      <h1>YAMURO</h1>
+      <p>Asset, Utility & Maintenance Management</p>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required autocomplete="username" />
+        <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password" />
+        <button type="submit" class="btn btn-primary">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" style="display:none; flex-direction:column; min-height:100vh;">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-logo">
+        <img src="logo.jpg" alt="Logo" />
+        <span>YAMURO</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <button class="account-btn" id="account-btn">
+        <span id="user-name">Admin</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="account-menu" id="account-menu">
+        <div class="user-info">
+          <strong id="user-name-menu">User</strong>
+          <small id="user-email"></small><br>
+          <small id="user-role"></small> · <small id="user-account"></small>
+        </div>
+        <a href="#" onclick="switchTab('settings'); return false;">Edit Profile / Settings</a>
+        <a href="#" onclick="alert('YAMURO v1.5.2 – Desktop Admin\\nDeveloper: Sreekesh Unnikrishnan'); return false;">About App</a>
+        <a href="#" onclick="alert('Contact: aimofdesire@gmail.com\\nWhatsApp / Phone available in mobile app'); return false;">Contact & Support</a>
+        <a href="#" onclick="alert('App Version: 1.5.2 (Desktop PWA)'); return false;">App Version</a>
+        <button class="danger" id="btn-signout">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- TABS -->
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="service">Service</button>
+      <button class="tab-btn" data-tab="utility">Utility</button>
+      <button class="tab-btn" data-tab="master">Master</button>
+      <button class="tab-btn" data-tab="settings">Settings</button>
+    </nav>
+
+    <main class="main">
+
+      <!-- ==================== SERVICE ==================== -->
+      <div id="panel-service" class="panel active">
+        <div class="search-bar">
+          <input type="text" id="svc-search" placeholder="Search any field..." />
+          <label class="advance-toggle">
+            <input type="checkbox" id="svc-advance" /> Advance Search
+          </label>
+          <button class="btn btn-primary" id="svc-btn-search">Search</button>
+          <div class="advance-panel" id="svc-advance-panel">
+            <label>From Date <input type="date" id="svc-from" /></label>
+            <label>To Date <input type="date" id="svc-to" /></label>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="form-title">Service Record</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="svc-date" />
+            </div>
+            <div class="form-group">
+              <label>Asst.No *</label>
+              <input type="text" id="svc-asstno" placeholder="Enter Asst.No" />
+            </div>
+            <div class="form-group">
+              <label>Type Of Work *</label>
+              <select id="svc-typeofwork"></select>
+            </div>
+            <div class="form-group">
+              <label>Parts Used</label>
+              <input type="text" id="svc-parts" placeholder="Enter Parts Used" />
+            </div>
+            <div class="form-group">
+              <label>Asst.Name (auto)</label>
+              <input type="text" id="svc-asstname" placeholder="Asst.Name Auto Fetch" disabled />
+            </div>
+            <div class="form-group">
+              <label>Flat.No (auto)</label>
+              <input type="text" id="svc-flatno" placeholder="Flat.No Auto Fetch" disabled />
+            </div>
+            <div class="form-group">
+              <label>Cost</label>
+              <input type="text" id="svc-cost" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+              <label>Attach Image</label>
+              <input type="file" id="svc-image" accept="image/*" />
+              <input type="hidden" id="svc-image-url" />
+              <div id="svc-image-preview" style="margin-top:6px;font-size:0.85rem;"></div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-success" id="svc-btn-create">Create</button>
+            <button class="btn btn-primary" id="svc-btn-edit" disabled>Edit</button>
+            <button class="btn btn-danger" id="svc-btn-delete" disabled>Delete</button>
+            <button class="btn btn-secondary" id="svc-btn-reset">Reset</button>
+          </div>
+        </div>
+
+        <div class="table-card" id="svc-table">
+          <div class="table-header">
+            <h3>Service Records</h3>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary btn-export-csv">Export CSV</button>
+              <button class="btn btn-outline btn-close-table">Close</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== UTILITY ==================== -->
+      <div id="panel-utility" class="panel">
+        <div class="search-bar">
+          <input type="text" id="util-search" placeholder="Search any field..." />
+          <label class="advance-toggle">
+            <input type="checkbox" id="util-advance" /> Advance Search
+          </label>
+          <button class="btn btn-primary" id="util-btn-search">Search</button>
+          <div class="advance-panel" id="util-advance-panel">
+            <label>From Date <input type="date" id="util-from" /></label>
+            <label>To Date <input type="date" id="util-to" /></label>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="form-title">Utility Record</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="util-date" />
+            </div>
+            <div class="form-group">
+              <label>Utility Name *</label>
+              <select id="util-name"></select>
+            </div>
+            <div class="form-group">
+              <label>Specify</label>
+              <input type="text" id="util-specify" placeholder="Specify Utility Name" />
+            </div>
+            <div class="form-group">
+              <label>Type Of Work *</label>
+              <select id="util-typeofwork"></select>
+            </div>
+            <div class="form-group">
+              <label>Parts Used</label>
+              <input type="text" id="util-parts" placeholder="Enter Parts Used" />
+            </div>
+            <div class="form-group">
+              <label>Flat.No</label>
+              <input type="text" id="util-flatno" placeholder="e.g. 12/1145" />
+            </div>
+            <div class="form-group">
+              <label>Cost</label>
+              <input type="text" id="util-cost" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+              <label>Attach Image</label>
+              <input type="file" id="util-image" accept="image/*" />
+              <input type="hidden" id="util-image-url" />
+              <div id="util-image-preview" style="margin-top:6px;font-size:0.85rem;"></div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-success" id="util-btn-create">Create</button>
+            <button class="btn btn-primary" id="util-btn-edit" disabled>Edit</button>
+            <button class="btn btn-danger" id="util-btn-delete" disabled>Delete</button>
+            <button class="btn btn-secondary" id="util-btn-reset">Reset</button>
+          </div>
+        </div>
+
+        <div class="table-card" id="util-table">
+          <div class="table-header">
+            <h3>Utility Records</h3>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary btn-export-csv">Export CSV</button>
+              <button class="btn btn-outline btn-close-table">Close</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== MASTER ==================== -->
+      <div id="panel-master" class="panel">
+        <div class="search-bar">
+          <input type="text" id="mst-search" placeholder="Search any field..." />
+          <label class="advance-toggle">
+            <input type="checkbox" id="mst-advance" /> Advance Search
+          </label>
+          <button class="btn btn-primary" id="mst-btn-search">Search</button>
+          <button class="btn btn-secondary" id="mst-btn-assets">Assets List</button>
+          <button class="btn btn-secondary" id="mst-btn-removed">View Removed Assets</button>
+          <div class="advance-panel" id="mst-advance-panel">
+            <label>From Date <input type="date" id="mst-from" /></label>
+            <label>To Date <input type="date" id="mst-to" /></label>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="form-title">Asset Master</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="mst-date" />
+            </div>
+            <div class="form-group">
+              <label>Flat.No</label>
+              <input type="text" id="mst-flatno" placeholder="e.g. 12/1145" />
+            </div>
+            <div class="form-group">
+              <label>Asst.No *</label>
+              <input type="text" id="mst-asstno" placeholder="Enter Asst.No" />
+            </div>
+            <div class="form-group">
+              <label>Asst.Cat</label>
+              <input type="text" id="mst-asstcat" placeholder="Enter Asst.Cat" />
+            </div>
+            <div class="form-group">
+              <label>Asst.Name *</label>
+              <input type="text" id="mst-asstname" placeholder="Enter Asst.Name" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-success" id="mst-btn-create">Create</button>
+            <button class="btn btn-primary" id="mst-btn-edit" disabled>Edit</button>
+            <button class="btn btn-danger" id="mst-btn-delete" disabled>Delete</button>
+            <button class="btn btn-secondary" id="mst-btn-reset">Reset</button>
+          </div>
+        </div>
+
+        <div class="table-card" id="mst-table">
+          <div class="table-header">
+            <h3>Master / Assets</h3>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary btn-export-csv">Export CSV</button>
+              <button class="btn btn-outline btn-close-table">Close</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SETTINGS ==================== -->
+      <div id="panel-settings" class="panel">
+        <div class="settings-card">
+          <div class="profile-row">
+            <div class="profile-avatar" id="profile-avatar">U</div>
+            <div>
+              <strong id="settings-username">User</strong><br>
+              <small id="settings-email" style="color:var(--muted)"></small>
+            </div>
+          </div>
+          <h2>Settings</h2>
+          <p>Manage your account and application preferences.</p>
+          <div class="settings-list">
+            <a href="#" onclick="alert('Profile editing will be available in a future update.'); return false;">Edit Profile</a>
+            <a href="#" onclick="alert('YAMURO is a maintenance management application developed for Yateem properties.\\n\\nMain Features:\\n• Asset List\\n• Service Records\\n• Utility Records\\n• Removed Asset History\\n\\nDeveloper: Sreekesh Unnikrishnan'); return false;">About App</a>
+            <a href="#" onclick="alert('Email: aimofdesire@gmail.com\\nReply usually within 24 hrs.'); return false;">Contact & Support</a>
+            <a href="#" onclick="alert('Desktop PWA Version 1.5.2'); return false;">App Version — V 1.5.2</a>
+            <button class="danger" onclick="if(confirm('This will permanently delete your account. Continue?')) alert('Please contact support to delete account.');">Delete Account</button>
+            <button class="danger" id="btn-signout-2" onclick="signOut()">Sign Out</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- TOAST & LOADING -->
+  <div id="toast" class="toast"></div>
+  <div id="loading" class="loading-overlay"><div class="spinner"></div></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
